@@ -5,7 +5,7 @@ const deleteCard = function (evt) {
   evt.target.closest(".places__item").remove();
 };
 
-function addCard(card, deleteOnClick) {
+function createCard(card, deleteOnClick) {
   const cardElement = cardTemplate.querySelector(".places__item").cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
   const deleteButton = cardElement.querySelector(".card__delete-button");
@@ -20,7 +20,7 @@ function addCard(card, deleteOnClick) {
 
 function renderPlacesList() {
   initialCards.forEach((card) => {
-    const cardElement = addCard(card, deleteCard);
+    const cardElement = createCard(card, deleteCard);
     placeListElement.append(cardElement);
   });
 }
