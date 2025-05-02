@@ -1,7 +1,7 @@
 const cardTemplate = document.querySelector("#card-template").content;
 const placeListElement = document.querySelector(".places__list");
 
-const delOnClick = function (evt) {
+const deleteOnClick = function (evt) {
   evt.target.closest(".places__item").remove();
 };
 
@@ -20,7 +20,7 @@ function addCard(card, delOnClick) {
 
 function renderPlacesList() {
   initialCards.forEach((card) => {
-    const cardElement = addCard(card, delOnClick);
+    const cardElement = addCard(card, deleteOnClick);
     placeListElement.append(cardElement);
   });
 }
