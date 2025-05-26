@@ -36,9 +36,9 @@ function createCard(card, deleteOnClick, likeOnClick, cardOnClick) {
 
   cardImage.setAttribute("alt", card.name);
   cardImage.setAttribute("src", card.link);
-  deleteButton.addEventListener("click", deleteOnClick);
-  likeButton.addEventListener("click", likeOnClick);
-  cardImage.addEventListener("click", cardOnClick);
+  deleteButton.addEventListener("click", () => deleteOnClick(cardElement));
+  likeButton.addEventListener("click", () => likeOnClick(likeButton));
+  cardImage.addEventListener("click", () => cardOnClick(cardImage, title));
   title.textContent = card.name;
   return cardElement;
 }

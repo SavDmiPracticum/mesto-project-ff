@@ -28,21 +28,18 @@ const popupImage = document.querySelector(".popup_type_image");
 const popupImageSrc = document.querySelector(".popup__image");
 const popupImageCaption = document.querySelector(".popup__caption");
 
-const onDeleteCard = (evt) => {
-  deleteCard(evt.target.closest(".places__item"));
+const onDeleteCard = (cardElement) => {
+  deleteCard(cardElement);
 };
 
-const onLikeCard = (evt) => {
-  likeCard(evt.target);
+const onLikeCard = (likeButton) => {
+  likeCard(likeButton);
 };
 
-const onClickCard = (evt) => {
-  popupImageSrc.src = evt.target.src;
-  popupImageSrc.alt = evt.target.alt;
-  const cardTitle = evt.target
-    .closest(".places__item")
-    .querySelector(".card__title");
-  popupImageCaption.textContent = cardTitle.textContent;
+const onClickCard = (cardImage, title) => {
+  popupImageSrc.src = cardImage.src;
+  popupImageSrc.alt = cardImage.alt;
+  popupImageCaption.textContent = title.textContent;
   openModal(popupImage);
 };
 

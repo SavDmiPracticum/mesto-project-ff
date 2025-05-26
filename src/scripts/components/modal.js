@@ -13,13 +13,13 @@ const onClickExit = (evt) => {
 function openModal(popUpElement) {
   popUpElement.classList.add("popup_is-opened");
   document.addEventListener("keydown", onEscape);
-  document.addEventListener("click", onClickExit);
+  document.addEventListener("mousedown", onClickExit);
 }
 
 function closeModal(popUpElement) {
   popUpElement.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", onEscape);
-  document.removeEventListener("click", onClickExit);
+  document.removeEventListener("mousedown", onClickExit);
 }
 
 export { openModal, closeModal };
