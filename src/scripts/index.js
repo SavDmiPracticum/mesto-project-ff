@@ -25,7 +25,8 @@ const addFormName = document.querySelector(".popup__input_type_card-name");
 const addFormLink = document.querySelector(".popup__input_type_url");
 
 const popupImage = document.querySelector(".popup_type_image");
-const imageSrc = document.querySelector(".popup__image");
+const popupImageSrc = document.querySelector(".popup__image");
+const popupImageCaption = document.querySelector(".popup__caption");
 
 const onDeleteCard = (evt) => {
   deleteCard(evt.target.closest(".places__item"));
@@ -36,7 +37,12 @@ const onLikeCard = (evt) => {
 };
 
 const onClickCard = (evt) => {
-  imageSrc.src = evt.target.src;
+  popupImageSrc.src = evt.target.src;
+  popupImageSrc.alt = evt.target.alt;
+  const cardTitle = evt.target
+    .closest(".places__item")
+    .querySelector(".card__title");
+  popupImageCaption.textContent = cardTitle.textContent;
   openModal(popupImage);
 };
 
