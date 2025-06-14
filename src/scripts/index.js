@@ -2,6 +2,7 @@ import "../pages/index.css";
 import { initialCards } from "./components/cards.js";
 import { createCard, deleteCard, likeCard } from "./components/card.js";
 import { openModal, closeModal } from "./components/modal.js";
+import { enableValidation, clearValidation } from "./components/validation.js";
 
 const placeListElement = document.querySelector(".places__list");
 
@@ -70,12 +71,15 @@ popupClose.forEach((cross) => {
 });
 
 profileEditButton.addEventListener("click", () => {
+  clearValidation(editForm, { inputSelector: ".popup__input"});
   editFormName.value = profileTitle.textContent;
   editFormDesc.value = profileDesc.textContent;
   openModal(profileEditPopup);
 });
 
 profileAddButton.addEventListener("click", () => {
+  addForm.reset();
+  clearValidation(addForm, { inputSelector: ".popup__input"});
   openModal(profileAddPopup);
 });
 
@@ -91,3 +95,12 @@ function renderPlacesList() {
 }
 
 renderPlacesList();
+
+enableValidation({
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+});
