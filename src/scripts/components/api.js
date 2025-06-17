@@ -6,15 +6,13 @@ const config = {
   },
 };
 
+const checkResponse = (res) => {
+  return res.ok ? res.json() : Promise.reject(`API error: ${res.status}`);
+};
+
 const getInitialCards = () => {
-  return fetch(`${config.url}/cards`, { headers: config.headers }).then(
-    (res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Error initialize cards: ${res.status}`);
-      }
-    }
+  return fetch(`${config.url}/cards`, { headers: config.headers }).then((res) =>
+    checkResponse(res)
   );
 };
 
@@ -23,59 +21,33 @@ const addNewCardItem = (name, link) => {
     method: "POST",
     headers: config.headers,
     body: JSON.stringify({ name, link }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Error adding card: ${res.status}`);
-    }
-  });
+  }).then((res) => checkResponse(res));
 };
 
 const deleteCardItem = (cardId) => {
   return fetch(`${config.url}/cards/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  }).then((res) => {
-    if (!res.ok) return Promise.reject(`Error deleting card: ${res.status}`);
-  });
+  }).then((res) => checkResponse(res));
 };
 
 const likeCardItem = (cardId) => {
   return fetch(`${config.url}/cards/likes/${cardId}`, {
     method: "PUT",
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Error liking card: ${res.status}`);
-    }
-  });
+  }).then((res) => checkResponse(res));
 };
 
 const disLikeCardItem = (cardId) => {
   return fetch(`${config.url}/cards/likes/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Error liking card: ${res.status}`);
-    }
-  });
+  }).then((res) => checkResponse(res));
 };
 
 const getUserProfile = () => {
   return fetch(`${config.url}/users/me`, { headers: config.headers }).then(
-    (res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Error getting user: ${res.status}`);
-      }
-    }
+    (res) => checkResponse(res)
   );
 };
 
@@ -84,13 +56,7 @@ const editUserProfile = (name, about) => {
     method: "PATCH",
     headers: config.headers,
     body: JSON.stringify({ name, about }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Error editing user: ${res.status}`);
-    }
-  });
+  }).then((res) => checkResponse(res));
 };
 
 const editUserAvatar = (avatar) => {
@@ -98,13 +64,7 @@ const editUserAvatar = (avatar) => {
     method: "PATCH",
     headers: config.headers,
     body: JSON.stringify({ avatar }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    } else {
-      return Promise.reject(`Error editing avatar: ${res.status}`);
-    }
-  });
+  }).then((res) => checkResponse(res));
 };
 
 export {

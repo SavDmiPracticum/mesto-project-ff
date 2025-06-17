@@ -13,6 +13,8 @@ import {
   editUserAvatar,
 } from "./components/api.js";
 
+let userId;
+
 const validationConfig = {
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
@@ -23,6 +25,7 @@ const validationConfig = {
 };
 
 const placeListElement = document.querySelector(".places__list");
+const popupList = document.querySelectorAll(".popup");
 
 const profileEditButton = document.querySelector(".profile__edit-button");
 const profileEditPopup = document.querySelector(".popup_type_edit");
@@ -49,8 +52,11 @@ const avatarPopup = document.querySelector(".popup_type_new-avatar");
 const avatarFormLink = document.querySelector(".popup__input_type_avatar_url");
 
 const onDeleteCard = (cardElement, cardId) => {
-  deleteCardItem(cardId).catch((err) => console.log(err));
-  deleteCard(cardElement);
+  deleteCardItem(cardId)
+    .then(() => {
+      deleteCard(cardElement);
+    })
+    .catch((err) => console.log(err));
 };
 
 const onLikeCard = (likeButton, cardId, likeNumber) => {
@@ -95,36 +101,33 @@ const onFormEditSubmit = (evt) => {
     .then((result) => {
       profileTitle.textContent = result.name;
       profileDesc.textContent = result.about;
+      closeModal(evt.target.closest(".popup"));
     })
     .catch((err) => {
       console.log(err);
     })
     .finally(() => renderLoading(popupButton, false));
-  closeModal(evt.target.closest(".popup"));
 };
 
 const onFormAddSubmit = (evt) => {
   evt.preventDefault();
   const popupButton = addForm.querySelector(".popup__button");
   renderLoading(popupButton, true);
-  Promise.all([
-    addNewCardItem(addFormName.value, addFormLink.value),
-    getUserProfile(),
-  ])
-    .then(([card, user]) => {
+  addNewCardItem(addFormName.value, addFormLink.value)
+    .then((card) => {
       const newCardElement = createCard(
         card,
-        user,
+        userId,
         onDeleteCard,
         onLikeCard,
         onClickCard
       );
       placeListElement.prepend(newCardElement);
+      addForm.reset();
+      closeModal(evt.target.closest(".popup"));
     })
     .catch((err) => console.log(err))
     .finally(() => renderLoading(popupButton, false));
-  addForm.reset();
-  closeModal(evt.target.closest(".popup"));
 };
 
 const onFormAvatarSubmit = (evt) => {
@@ -134,17 +137,21 @@ const onFormAvatarSubmit = (evt) => {
   editUserAvatar(avatarFormLink.value)
     .then((user) => {
       profileAvatar.style = `background-image: url(${user.avatar})`;
+      avatarForm.reset();
+      closeModal(evt.target.closest(".popup"));
     })
     .catch((err) => console.log(err))
     .finally(() => renderLoading(popupButton, false));
-  avatarForm.reset();
-  closeModal(evt.target.closest(".popup"));
 };
 
 popupClose.forEach((cross) => {
   cross.addEventListener("click", (evt) => {
     closeModal(evt.target.closest(".popup"));
   });
+});
+
+popupList.forEach((popup) => {
+  popup.classList.add("popup_is-animated");
 });
 
 profileEditButton.addEventListener("click", () => {
@@ -170,25 +177,18 @@ editForm.addEventListener("submit", onFormEditSubmit);
 addForm.addEventListener("submit", onFormAddSubmit);
 avatarPopup.addEventListener("submit", onFormAvatarSubmit);
 
-const renderUserProfile = () => {
-  getUserProfile()
-    .then((user) => {
+const initializeApp = () => {
+  Promise.all([getUserProfile(), getInitialCards()])
+    .then(([user, cards]) => {
       profileTitle.textContent = user.name;
       profileDesc.textContent = user.about;
       profileAvatar.style = `background-image: url(${user.avatar})`;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+      userId = user._id;
 
-const renderPlacesList = () => {
-  Promise.all([getUserProfile(), getInitialCards()])
-    .then(([user, cards]) => {
       cards.forEach((card) => {
         const cardElement = createCard(
           card,
-          user,
+          userId,
           onDeleteCard,
           onLikeCard,
           onClickCard
@@ -196,11 +196,8 @@ const renderPlacesList = () => {
         placeListElement.append(cardElement);
       });
     })
-    .catch((err) => {
-      console.log(err);
-    });
+    .catch((err) => console.log(err));
 };
 
-renderUserProfile();
-renderPlacesList();
+initializeApp();
 enableValidation(validationConfig);
