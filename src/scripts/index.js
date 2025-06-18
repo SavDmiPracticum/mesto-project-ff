@@ -101,7 +101,7 @@ const onFormEditSubmit = (evt) => {
     .then((result) => {
       profileTitle.textContent = result.name;
       profileDesc.textContent = result.about;
-      closeModal(evt.target.closest(".popup"));
+      closeModal(profileEditPopup);
     })
     .catch((err) => {
       console.log(err);
@@ -124,7 +124,7 @@ const onFormAddSubmit = (evt) => {
       );
       placeListElement.prepend(newCardElement);
       addForm.reset();
-      closeModal(evt.target.closest(".popup"));
+      closeModal(profileAddPopup);
     })
     .catch((err) => console.log(err))
     .finally(() => renderLoading(popupButton, false));
@@ -138,7 +138,7 @@ const onFormAvatarSubmit = (evt) => {
     .then((user) => {
       profileAvatar.style = `background-image: url(${user.avatar})`;
       avatarForm.reset();
-      closeModal(evt.target.closest(".popup"));
+      closeModal(avatarPopup);
     })
     .catch((err) => console.log(err))
     .finally(() => renderLoading(popupButton, false));
@@ -177,27 +177,24 @@ editForm.addEventListener("submit", onFormEditSubmit);
 addForm.addEventListener("submit", onFormAddSubmit);
 avatarPopup.addEventListener("submit", onFormAvatarSubmit);
 
-const initializeApp = () => {
-  Promise.all([getUserProfile(), getInitialCards()])
-    .then(([user, cards]) => {
-      profileTitle.textContent = user.name;
-      profileDesc.textContent = user.about;
-      profileAvatar.style = `background-image: url(${user.avatar})`;
-      userId = user._id;
+Promise.all([getUserProfile(), getInitialCards()])
+  .then(([user, cards]) => {
+    profileTitle.textContent = user.name;
+    profileDesc.textContent = user.about;
+    profileAvatar.style = `background-image: url(${user.avatar})`;
+    userId = user._id;
 
-      cards.forEach((card) => {
-        const cardElement = createCard(
-          card,
-          userId,
-          onDeleteCard,
-          onLikeCard,
-          onClickCard
-        );
-        placeListElement.append(cardElement);
-      });
-    })
-    .catch((err) => console.log(err));
-};
+    cards.forEach((card) => {
+      const cardElement = createCard(
+        card,
+        userId,
+        onDeleteCard,
+        onLikeCard,
+        onClickCard
+      );
+      placeListElement.append(cardElement);
+    });
+  })
+  .catch((err) => console.log(err));
 
-initializeApp();
 enableValidation(validationConfig);
