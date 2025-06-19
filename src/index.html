@@ -122,7 +122,7 @@
       </div>
     </div>
     <div class="popup popup_type_new-avatar">
-      <div class="popup__content popup__content-avatar">
+      <div class="popup__content popup__content-minheight">
         <button type="button" class="popup__close"></button>
         <h3 class="popup__title">Обновить аватар</h3>
         <form class="popup__form" name="new-avatar" novalidate>
@@ -138,6 +138,15 @@
             <span class="popup__error input-link-avatar-error"></span>
           </label>
           <button type="submit" class="button popup__button">Сохранить</button>
+        </form>
+      </div>
+    </div>
+    <div class="popup popup_type_approve-delete">
+      <div class="popup__content popup__content-minheight">
+        <button type="button" class="popup__close"></button>
+        <h3 class="popup__title">Вы уверены?</h3>
+        <form class="popup__form" name="delete" novalidate>
+          <button type="submit" class="button popup__button">Да</button>
         </form>
       </div>
     </div>

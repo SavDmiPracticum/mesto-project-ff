@@ -13,7 +13,9 @@ import {
   editUserAvatar,
 } from "./components/api.js";
 
-let userId;
+let userId = null;
+let idCardForDelete;
+let cardForDelete;
 
 const validationConfig = {
   formSelector: ".popup__form",
@@ -51,12 +53,12 @@ const avatarForm = document.querySelector('form[name="new-avatar"]');
 const avatarPopup = document.querySelector(".popup_type_new-avatar");
 const avatarFormLink = document.querySelector(".popup__input_type_avatar_url");
 
+const deleteForm = document.querySelector(".popup_type_approve-delete");
+
 const onDeleteCard = (cardElement, cardId) => {
-  deleteCardItem(cardId)
-    .then(() => {
-      deleteCard(cardElement);
-    })
-    .catch((err) => console.log(err));
+  idCardForDelete = cardId;
+  cardForDelete = cardElement;
+  openModal(deleteForm);
 };
 
 const onLikeCard = (likeButton, cardId, likeNumber) => {
@@ -144,6 +146,17 @@ const onFormAvatarSubmit = (evt) => {
     .finally(() => renderLoading(popupButton, false));
 };
 
+const onFormDeleteSubmit = (evt) => {
+  evt.preventDefault();
+  const popupButton = cardForDelete.querySelector(".popup__button");
+  deleteCardItem(idCardForDelete)
+    .then(() => {
+      deleteCard(cardForDelete);
+      closeModal(deleteForm);
+    })
+    .catch((err) => console.log(err));
+};
+
 popupClose.forEach((cross) => {
   cross.addEventListener("click", (evt) => {
     closeModal(evt.target.closest(".popup"));
@@ -176,6 +189,7 @@ profileAvatar.addEventListener("click", () => {
 editForm.addEventListener("submit", onFormEditSubmit);
 addForm.addEventListener("submit", onFormAddSubmit);
 avatarPopup.addEventListener("submit", onFormAvatarSubmit);
+deleteForm.addEventListener("submit", onFormDeleteSubmit);
 
 Promise.all([getUserProfile(), getInitialCards()])
   .then(([user, cards]) => {
